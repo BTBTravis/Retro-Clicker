@@ -57,6 +57,7 @@ defmodule ClickGame.Accounts do
 
     %User{}
     |> User.changeset(final_attrs)
+    |> Ecto.Changeset.cast_assoc(:game, with: &ClickGame.Games.Game.changeset/2)
     |> Repo.insert()
   end
 
