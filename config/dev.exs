@@ -60,8 +60,8 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Configure your database
 config :click_game, ClickGame.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "devpostgres",
+  password: "click",
   database: "click_game_dev",
   hostname: "localhost",
   pool_size: 10
