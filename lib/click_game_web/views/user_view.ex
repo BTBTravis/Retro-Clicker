@@ -13,6 +13,9 @@ defmodule ClickGameWeb.UserView do
   def render("user.json", %{user: user}) do
     %{id: user.id,
       name: user.name,
-      apikey: user.apikey}
+      apikey: user.apikey,
+      game: render_one(user.game, ClickGameWeb.GameView, "game.json")
+    }
   end
+
 end
