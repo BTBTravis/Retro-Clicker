@@ -2,20 +2,21 @@ defmodule ClickGameWeb.StoreView do
   use ClickGameWeb, :view
   alias ClickGameWeb.StoreView
 
-  #def render("index.json", %{games: games}) do
-    #%{data: render_many(games, GameView, "game.json")}
-  #end
-
-  def render("clickers.json", %{clickers: clickers}) do
-    %{data: render_many(clickers, StoreView, "clicker.json", as: :clicker)}
+  def render("store.json", %{clickers: clickers, upgrades: upgrades}) do
+    %{:data => %{
+      :clickers => render_many(clickers, StoreView, "store_item.json", as: :item),
+      :upgrades => render_many(upgrades, StoreView, "store_item.json", as: :item)
+    }}
   end
 
-  def render("clicker.json", %{clicker: clicker}) do
-    %{ 
-      name: clicker.name, 
-      type: clicker.type, 
-      base_rate: clicker.base_rate, 
-      price: clicker.price
+  def render("store_items.json", %{items: items}) do
+    %{data: render_many(items, StoreView, "store_item.json", as: :item)}
+  end
+
+  def render("store_item.json", %{item: item}) do
+    %{
+      name: item.name,
+      price: item.price
     }
   end
 end

@@ -36,6 +36,8 @@ defmodule ClickGameWeb.Router do
     get "/game_url", GameController, :game_url
     # get "/click/:side", GameController, :click
     get "/store/clickers", StoreController, :clickers
+    get "/store/upgrades", StoreController, :upgrades
+    get "/store", StoreController, :store
     # resources "/game", UserController, :game
   end
 end
