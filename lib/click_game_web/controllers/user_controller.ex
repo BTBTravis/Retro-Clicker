@@ -12,15 +12,15 @@ defmodule ClickGameWeb.UserController do
   end
 
   def create(conn, %{"name" => name, "clicks" => clicks}) do
-    user_and_game = case Accounts.create_user(%{"name" => name}) do
-      {:ok, %User{} = user} -> {:ok, %{:user => user, :game => ClickGame.Games.create_game(%{:user_id => user.id, :clicks => clicks})}}
-    end
+    with {:ok, user} <- Accounts.create_user(%{"name" => name}) do
+      ClickGame.Games.create_game(%{:user_id => user.id, :clicks => clicks})
 
-    with {:ok, res} <- user_and_game do
+      loaded_user = Accounts.get_user!(user.id)
+
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.user_path(conn, :show, res.user))
-      |> render("show.json", user: res.user)
+      |> put_resp_header("location", Routes.user_path(conn, :show, loaded_user))
+      |> render("show.json", user: loaded_user)
     end
   end
 

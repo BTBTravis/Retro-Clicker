@@ -8,32 +8,9 @@ defmodule ClickGame.Games do
 
   alias ClickGame.Games.Game
 
-  @doc """
-  Returns the list of games.
-
-  ## Examples
-
-      iex> list_games()
-      [%Game{}, ...]
-
-  """
-  def list_games do
-    Repo.all(Game)
-  end
 
   @doc """
   Gets a single game.
-
-  Raises `Ecto.NoResultsError` if the Game does not exist.
-
-  ## Examples
-
-      iex> get_game!(123)
-      %Game{}
-
-      iex> get_game!(456)
-      ** (Ecto.NoResultsError)
-
   """
   def get_game!(id), do: Repo.get!(Game, id)
 
@@ -55,53 +32,11 @@ defmodule ClickGame.Games do
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a game.
 
-  ## Examples
-
-      iex> update_game(game, %{field: new_value})
-      {:ok, %Game{}}
-
-      iex> update_game(game, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_game(%Game{} = game, attrs) do
-    game
-    |> Game.changeset(attrs)
-    |> Repo.update()
-  end
 
   @doc """
-  Deletes a Game.
-
-  ## Examples
-
-      iex> delete_game(game)
-      {:ok, %Game{}}
-
-      iex> delete_game(game)
-      {:error, %Ecto.Changeset{}}
-
+  Returns the URL the player may view their game at
   """
-  def delete_game(%Game{} = game) do
-    Repo.delete(game)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking game changes.
-
-  ## Examples
-
-      iex> change_game(game)
-      %Ecto.Changeset{source: %Game{}}
-
-  """
-  def change_game(%Game{} = game) do
-    Game.changeset(game, %{})
-  end
-
   def get_game_url(game_id) do
     "http://clickgame.travisshears.xyz/game/" <> Integer.to_string(game_id)
   end

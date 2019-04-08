@@ -31,9 +31,11 @@ defmodule ClickGameWeb.Router do
     resources "/users", UserController, except: [:new, :edit]
   end
 
-  scope "/api/", ClickGameWeb do
+  scope "/api/player/", ClickGameWeb do
     pipe_through :player_api
     get "/game_url", GameController, :game_url
+    # get "/click/:side", GameController, :click
+    get "/store/clickers", StoreController, :clickers
     # resources "/game", UserController, :game
   end
 end
