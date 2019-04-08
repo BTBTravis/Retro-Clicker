@@ -101,4 +101,8 @@ defmodule ClickGame.Games do
   def change_game(%Game{} = game) do
     Game.changeset(game, %{})
   end
+
+  def get_game_url(game_id) do
+    "http://clickgame.travisshears.xyz/game/" <> Integer.to_string(game_id)
+  end
 end

@@ -9,7 +9,12 @@ defmodule ClickGameWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
+  pipeline :player_api do
+    plug :accepts, ["json"]
+    plug ClickGameWeb.Plugs.LoadUser
+  end
+
+  pipeline :admin_api do
     plug :accepts, ["json"]
   end
 
@@ -22,7 +27,13 @@ defmodule ClickGameWeb.Router do
 
   # Other scopes may use custom stacks.
   scope "/api/admin/", ClickGameWeb do
-    pipe_through :api
+    pipe_through :admin_api
     resources "/users", UserController, except: [:new, :edit]
+  end
+
+  scope "/api/", ClickGameWeb do
+    pipe_through :player_api
+    get "/game_url", GameController, :game_url
+    # resources "/game", UserController, :game
   end
 end

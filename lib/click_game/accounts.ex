@@ -41,6 +41,15 @@ defmodule ClickGame.Accounts do
     |> Repo.preload(:game)
   end
 
+
+  @doc """
+  Gets a single user from there api key
+  """
+  def get_user_by_api_key(key) do
+    Repo.get_by(User, apikey: key)
+    |> Repo.preload(:game)
+  end
+
   @doc """
   Creates a user.
 
