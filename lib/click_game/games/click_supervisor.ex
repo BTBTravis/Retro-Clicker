@@ -1,7 +1,6 @@
 defmodule ClickGame.Games.ClickSupervisor do
   use DynamicSupervisor
 
-  alias ClickGame.Games.ClickStore
   alias ClickGame.Games.ClickServer
 
   def start_link(_arg) do
@@ -21,23 +20,6 @@ defmodule ClickGame.Games.ClickSupervisor do
     DynamicSupervisor.init(strategy: :one_for_one)
   end
 end
-#defmodule ClickGame.Games.ClickSupervisor do
-#use Supervisor
-#alias ClickGame.Games.ClickServer
 
-#def start_link(init_arg) do
-##Supervisor.start_link(__MODULE__, :ok, opts)
-#Supervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
-#end
-
-
-#@impl true
-#def init(_init_arg) do
-#children = [
-#Supervisor.child_spec({ClickServer, %{:clicks => 0, :rate => 1}}, id: {ClickServer, 1}),
-#Supervisor.child_spec({ClickServer, %{:clicks => 0, :rate => 10}}, id: {ClickServer, 2})
-#]
-
-#Supervisor.init(children, strategy: :one_for_one)
-#end
-#end
+# Get pid of ClickServer by index
+#iex(6)> [{pid_3, nil}] = Registry.lookup(Registry.ClickStore, 3)
