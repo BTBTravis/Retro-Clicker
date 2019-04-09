@@ -11,9 +11,15 @@ defmodule ClickGame.Application do
       # Start the Ecto repository
       ClickGame.Repo,
       # Start the endpoint when the application starts
-      ClickGameWeb.Endpoint
+      ClickGameWeb.Endpoint,
       # Starts a worker by calling: ClickGame.Worker.start_link(arg)
       # {ClickGame.Worker, arg},
+
+      {ClickGame.Games.ClickSupervisor, [[]]},
+      #{
+	#id: ClickGame.Games.ClickSupervisor,
+	#start: {ClickGame.Games.ClickSupervisor, :start_link, [[]]}
+      #}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
