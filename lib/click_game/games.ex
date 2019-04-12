@@ -77,7 +77,6 @@ defmodule ClickGame.Games do
   Returns the URL the player may view their game at
   """
   def get_game_url(game_id) do
-    # TODO: get start of url from config field or env
-    "http://clickgame.travisshears.xyz/game/" <> Integer.to_string(game_id)
+    Application.get_env(:click_game, ClickGameWeb.Endpoint)[:url][:host] <> "/" <> Integer.to_string(game_id)
   end
 end
