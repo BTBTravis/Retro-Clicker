@@ -34,6 +34,8 @@ defmodule ClickGameWeb.Router do
   scope "/api/player/", ClickGameWeb do
     pipe_through :player_api
     get "/game_url", GameController, :game_url
+    get "/clicks", GameController, :clicks
+    get "/click", GameController, :click
     # get "/click/:side", GameController, :click
     get "/store/clickers", StoreController, :clickers
     get "/store/upgrades", StoreController, :upgrades

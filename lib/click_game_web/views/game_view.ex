@@ -14,6 +14,10 @@ defmodule ClickGameWeb.GameView do
     %{url: url}
   end
 
+  def render("clicks.json", %{clicks: clicks}) do
+    %{clicks: clicks}
+  end
+
   def render("game.json", %{game: game}) do
     %{id: game.id,
       clicks: game.clicks

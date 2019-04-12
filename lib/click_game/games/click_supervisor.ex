@@ -4,10 +4,14 @@ defmodule ClickGame.Games.ClickSupervisor do
   alias ClickGame.Games.ClickServer
 
   def start_link(_arg) do
-    DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
+    res = DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
 
     # Start click store
-    {:ok, _} = Registry.start_link(keys: :unique, name: Registry.ClickStore)
+    with {:ok, _} <- res do
+      {:ok, _} = Registry.start_link(keys: :unique, name: Registry.ClickStore)
+      ClickGame.Games.start_click_servers()
+    end
+    res
   end
 
   def start_click_server(index, params) do
