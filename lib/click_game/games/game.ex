@@ -5,6 +5,8 @@ defmodule ClickGame.Games.Game do
   schema "games" do
     field :clicks, :integer, default: 0
     belongs_to :user, ClickGame.Accounts.User
+    has_many :clickers, ClickGame.Games.Clicker
+
 
     timestamps()
   end

@@ -10,13 +10,17 @@ defmodule ClickGame.Games do
   @doc """
   Gets a single game.
   """
-  def get_game!(id), do: Repo.get!(Game, id)
+  def get_game!(id) do
+    Repo.get!(Game, id)
+    |> Repo.preload(:clickers)
+  end
 
   @doc """
   List all games
   """
   def list_games do
     Repo.all(Game)
+    |> Repo.preload(:clickers)
   end
 
   @doc """
@@ -66,8 +70,10 @@ defmodule ClickGame.Games do
     |> Repo.update()
   end
 
-  defp caculate_click_rate(_game) do
-    0
+  defp caculate_click_rate(game) do
+    game.clickers
+    |> Enum.map(fn c -> c.base_rate end)
+    |> Enum.sum()
   end
 
   # iex(39)> pids = Enum.map(games, fn g -> Registry.lookup(Registry.ClickStore, g.id) |> hd |> elem(0) end)

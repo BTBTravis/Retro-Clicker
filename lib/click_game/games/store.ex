@@ -11,9 +11,9 @@ defmodule ClickGame.Games.Store do
   ]
 
   @clickers [
-    %Clicker{name: "Left Clicker", type: :left, active: false, base_rate: 1, price: 10},
-    %Clicker{name: "Right Clicker", type: :right, active: false, base_rate: 1, price: 10},
-    %Clicker{name: "Simul Clicker", type: :both, active: false, base_rate: 1, price: 1000}
+    %Clicker{name: "Left Clicker", type: Clicker.left, is_active: false, base_rate: 1, price: 10},
+    %Clicker{name: "Right Clicker", type: Clicker.right, is_active: false, base_rate: 1, price: 10},
+    %Clicker{name: "Simul Clicker", type: Clicker.both, is_active: false, base_rate: 1, price: 1000}
   ]
 
   def get_clickers() do
