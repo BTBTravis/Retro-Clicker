@@ -28,17 +28,23 @@ defmodule ClickGame.Games do
   end
 
   def start_click_servers() do
-    list_games_full()
-    |> Enum.map(fn g -> ClickGame.Games.ClickSupervisor.start_click_server(g.id, %ClickServerState{:clicks => g.clicks, :rate => caculate_click_rate(g), :game_id => g.id}) end)
+    list_games()
+    |> Enum.map(fn g -> ClickGame.Games.ClickSupervisor.start_click_server(g.id) end)
   end
 
-  def update_clicker_server_rate(game_id, rate) do
+  def refresh_click_server(game_id) do
     pid = Registry.lookup(Registry.ClickStore, game_id) |> hd |> elem(0)
-    ClickGame.Games.ClickServer.update_rate(pid, rate)
-    #case ClickGame.Games.ClickServer.update_rate(pid, rate) do
-      #{:ok, _rate} -> {:ok, "updated rate"}
-      #{:error, _e} -> {:error, "could not updated rate"}
-    #end
+    ClickGame.Games.ClickServer.refresh(pid)
+  end
+
+  def handle_click_server_refresh(state) do
+    full_game = get_game_full!(state.game_id)
+    %{state | :rate => caculate_click_rate(full_game)}
+  end
+
+  def handle_click_server_init(game_id) do
+    full_game = get_game_full!(game_id)
+    %ClickServerState{:clicks => full_game.clicks, :rate => caculate_click_rate(full_game), :game_id => game_id}
   end
 
   def create_game(attrs \\ %{}) do
@@ -46,14 +52,11 @@ defmodule ClickGame.Games do
     |> Game.changeset(attrs)
     |> Repo.insert()
 
-    with {:ok, %Game{} = game} <- res,
-         {:ok,  %Game{} = full_game} <- get_game_full!(game.id) do 
-      ClickGame.Games.ClickSupervisor.start_click_server(
-        game.id, 
-        %ClickServerState{:clicks => game.clicks, :rate => caculate_click_rate(full_game), :game_id => game.id}
-      )
-      end
+    with {:ok, %Game{} = game} <- res do
+      ClickGame.Games.ClickSupervisor.start_click_server(game.id)
     end
+    res
+  end
 
   @doc """
   Get the current number of clicks from the click server
@@ -80,10 +83,13 @@ defmodule ClickGame.Games do
   end
 
   def add_clicker_to_game(game, %Clicker{} = clicker) do
-    clicker
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_assoc(:game, game)
-    |> Repo.insert()
+    c = clicker
+        |> Ecto.Changeset.change()
+        |> Ecto.Changeset.put_assoc(:game, game)
+        |> Repo.insert()
+
+    refresh_click_server(game.id)
+    c
   end
 
   defp caculate_click_rate(game) do

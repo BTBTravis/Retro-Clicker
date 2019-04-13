@@ -14,9 +14,9 @@ defmodule ClickGame.Games.ClickSupervisor do
     res
   end
 
-  def start_click_server(index, params) do
+  def start_click_server(index) do
     name = {:via, Registry, {Registry.ClickStore, index}}
-    spec = {ClickServer, [name, params]}
+    spec = {ClickServer, [name, index]}
     DynamicSupervisor.start_child(__MODULE__, spec)
   end
 

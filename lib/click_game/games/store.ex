@@ -54,7 +54,7 @@ defmodule ClickGame.Games.Store do
     clicker = Enum.at(@clickers, String.to_integer(index), :none)
     can_afford = case clicker do
       :none -> false
-      %Clicker{} = c -> c.price < player_balence(game)
+      %Clicker{} = c -> c.price <= player_balence(game)
       _ -> false
     end
 
@@ -66,6 +66,6 @@ defmodule ClickGame.Games.Store do
 
   def player_balence(game) do
     debt = Enum.reduce(game.clickers, 0, fn x, acc -> x.price + acc end)
-    game.clicks - debt
+    ClickGame.Games.get_latest_click_count(game.id) - debt
   end
 end

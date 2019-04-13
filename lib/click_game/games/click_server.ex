@@ -5,13 +5,19 @@ defmodule ClickGame.Games.ClickServer  do
   @sync_length 60000
 
   # Client
-  def start_link([name, params]) do
-    GenServer.start_link(__MODULE__, params, name: name)
+  def start_link([name, game_id]) do
+    state = ClickGame.Games.handle_click_server_init(game_id)
+    GenServer.start_link(__MODULE__, state, name: name)
   end
 
   def click(pid) do
     # GenServer.cast(pid, :click)
     GenServer.call(pid, :click)
+  end
+
+  def refresh(pid) do
+    Process.send(pid, :refresh, [:noconnect])
+    #Process.send(pid, :refresh, [:ok])
   end
 
   def get_clicks(pid) do
@@ -38,6 +44,12 @@ defmodule ClickGame.Games.ClickServer  do
   @impl true
   def handle_call(:get_clicks, _from, state) do
     {:reply, state.clicks, state}
+  end
+
+  @impl true
+  def handle_info(:refresh, state) do
+    newState = ClickGame.Games.handle_click_server_refresh(state)
+    {:noreply, newState}
   end
 
   @impl true
