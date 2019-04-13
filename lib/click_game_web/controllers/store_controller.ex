@@ -16,6 +16,15 @@ defmodule ClickGameWeb.StoreController do
     render(conn, "store.json", %{:clickers => add_index(cs), :upgrades => add_index(ups)})
   end
 
+  def buy_clicker(conn, %{"id" => id}) do
+    case Store.buy_clicker(id, true, conn.assigns.user.game.id) do
+      {:ok, %ClickGame.Games.Clicker{} = clicker} -> render(conn, "store_item.json", item: clicker)
+      {:error, e} -> conn
+      |> put_status(:not_acceptable)
+      |> render("problem.json", reason: e)
+    end
+  end
+
   defp add_index(list) do
     list
     |> Enum.map(fn x -> Map.from_struct(x) end)

@@ -20,4 +20,10 @@ defmodule ClickGameWeb.StoreView do
       price: item.price
     }
   end
+
+  def render("problem.json", %{reason: reason}) do
+    %{
+      reason: reason,
+    }
+  end
 end

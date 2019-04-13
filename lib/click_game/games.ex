@@ -6,45 +6,54 @@ defmodule ClickGame.Games do
   alias ClickGame.Repo
   alias ClickGame.Games.Game
   alias ClickGame.Games.ClickServerState
+  alias ClickGame.Games.Clicker
 
-  @doc """
-  Gets a single game.
-  """
+
   def get_game!(id) do
+    Repo.get!(Game, id)
+  end
+
+  def get_game_full!(id) do
     Repo.get!(Game, id)
     |> Repo.preload(:clickers)
   end
 
-  @doc """
-  List all games
-  """
   def list_games do
+    Repo.all(Game)
+  end
+
+  def list_games_full do
     Repo.all(Game)
     |> Repo.preload(:clickers)
   end
 
-  @doc """
-  Start click servers for all games
-  """
   def start_click_servers() do
-    list_games()
+    list_games_full()
     |> Enum.map(fn g -> ClickGame.Games.ClickSupervisor.start_click_server(g.id, %ClickServerState{:clicks => g.clicks, :rate => caculate_click_rate(g), :game_id => g.id}) end)
   end
 
-  @doc """
-  Creates a game given a change set
-  """
+  def update_clicker_server_rate(game_id, rate) do
+    pid = Registry.lookup(Registry.ClickStore, game_id) |> hd |> elem(0)
+    ClickGame.Games.ClickServer.update_rate(pid, rate)
+    #case ClickGame.Games.ClickServer.update_rate(pid, rate) do
+      #{:ok, _rate} -> {:ok, "updated rate"}
+      #{:error, _e} -> {:error, "could not updated rate"}
+    #end
+  end
+
   def create_game(attrs \\ %{}) do
     res = %Game{}
     |> Game.changeset(attrs)
     |> Repo.insert()
 
-    with {:ok, %Game{} = game} <- res do
-      ClickGame.Games.ClickSupervisor.start_click_server(game.id, %ClickServerState{:clicks => game.clicks, :rate => caculate_click_rate(game), :game_id => game.id})
-      game.id
+    with {:ok, %Game{} = game} <- res,
+         {:ok,  %Game{} = full_game} <- get_game_full!(game.id) do 
+      ClickGame.Games.ClickSupervisor.start_click_server(
+        game.id, 
+        %ClickServerState{:clicks => game.clicks, :rate => caculate_click_rate(full_game), :game_id => game.id}
+      )
+      end
     end
-    res
-  end
 
   @doc """
   Get the current number of clicks from the click server
@@ -68,6 +77,13 @@ defmodule ClickGame.Games do
     game
     |> Game.changeset(attrs)
     |> Repo.update()
+  end
+
+  def add_clicker_to_game(game, %Clicker{} = clicker) do
+    clicker
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_assoc(:game, game)
+    |> Repo.insert()
   end
 
   defp caculate_click_rate(game) do

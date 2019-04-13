@@ -40,6 +40,7 @@ defmodule ClickGameWeb.Router do
     get "/store/clickers", StoreController, :clickers
     get "/store/upgrades", StoreController, :upgrades
     get "/store", StoreController, :store
+    get "/store/clickers/buy/:id", StoreController, :buy_clicker
     # resources "/game", UserController, :game
   end
 end
