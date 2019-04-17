@@ -1,5 +1,5 @@
 defmodule ClickGame.Games.ClickServer  do
-  use GenServer
+  use GenServer, restart: :permanent
 
   @tick_length 1000
   @sync_length 60000
