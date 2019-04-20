@@ -13,6 +13,10 @@ defmodule ClickGame.Games do
     Repo.get!(Game, id)
   end
 
+  def get_game(id) do
+    Repo.get(Game, id)
+  end
+
   def get_game_full!(id) do
     Repo.get!(Game, id)
     |> Repo.preload(:clickers)
