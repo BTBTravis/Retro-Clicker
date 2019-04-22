@@ -12,6 +12,13 @@
       <ul class="inline-flex border border-black rounded p-3 text-gray-700">
         <li><a class="pr-4 hover:text-gray-400" href="/">home</a></li>
         <li><a class="hover:text-gray-400" href="/leaderboard">leaderboard</a></li>
+        <%= if is_logged(@conn) do %>
+          <li>
+          <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
+              <%= submit "logout" , [class: "pl-4 hover:text-gray-400 font-semibold"] %>
+          <% end %>
+          </li>
+        <% end %>
       </ul>
     </nav>
     <main role="main" class="container mx-auto h-full">

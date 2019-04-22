@@ -93,6 +93,18 @@ defmodule ClickGame.Accounts do
     Bcrypt.add_hash(pw).password_hash
   end
 
+  def auth_by_pw(name, pw) do
+    unauth = {:error, :unauthorized}
+    case Repo.get_by(User, name: name) do
+      %User{} = user -> 
+        case Bcrypt.check_pass(user, pw) do
+          {:ok, %User{}} -> user
+          _ -> unauth
+        end
+      _ -> unauth
+    end
+  end
+
 
   @doc """
   Updates a user.

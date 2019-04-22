@@ -1,7 +1,13 @@
-<ul class="flex flex-col list-reset items-center mt-20 mx-auto">
+<ul class="flex flex-col items-center mt-20 mx-auto">
   <%#<li class="inline-block shadow rounded px-2 py-1 mb-4"><a class="text-grey-dark" href="/">return to game</a></li>%>
   <%#<li class="inline-block shadow rounded px-2 py-1 mb-4"><a class="text-grey-dark" href="/">create game</a></li>%>
   <%#<li class="shadow rounded px-2 py-1"><a class="text-grey-dark" href="/leaderboard">leaderboard</a></li>%>
+  <%= if is_logged(@conn) do %>
+    <a class="group hover:bg-black hover:border-white font-semibold py-2 px-4 border border-black hover:border-transparent rounded no-underline" 
+       href="/game">
+      <p class="group-hover:text-white text-gray-700">current game</p>
+    </a>
+  <% else %>
     <a class="group hover:bg-black hover:border-white font-semibold py-2 px-4 border border-black hover:border-transparent rounded no-underline" 
        href="/login">
       <p class="group-hover:text-white text-gray-700">login</p>
@@ -10,4 +16,6 @@
        href="/signup">
       <p class="group-hover:text-white text-gray-700">signup</p>
     </a>
+  <% end %>
+
 </ul>

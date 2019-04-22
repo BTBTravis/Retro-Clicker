@@ -22,6 +22,8 @@ defmodule ClickGameWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/login", SessionController, :new
+    resources "/sessions", SessionController, only: [:create, :delete], singleton: true
     get "/game/:id", PageController, :game
     #resources "/games", GameController
   end
