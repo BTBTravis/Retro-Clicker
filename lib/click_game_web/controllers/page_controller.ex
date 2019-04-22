@@ -12,16 +12,4 @@ defmodule ClickGameWeb.PageController do
       _ -> ""
     end
   end
-
-  #def game(conn, %{"id" => id}) do
-    #case Games.get_game(id) do
-      #%Games.Game{} = game -> render(conn, "game.html", game: game)
-      #_ -> 
-        #conn
-        #|> put_status(:not_found)
-        #|> put_view(ClickGameWeb.ErrorView)
-        #|> render("404.html")
-    #end
-  #end
-  
 end

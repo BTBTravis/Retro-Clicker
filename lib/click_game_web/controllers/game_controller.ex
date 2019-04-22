@@ -13,10 +13,13 @@ defmodule ClickGameWeb.GameController do
   end
 
   def view(conn, %{"id" => id}) do
-    game_url = case conn.assigns.user.game.id do
-      nil -> ""
-      id -> Routes.game_path(conn, :view) <> id
+    case Games.get_game(id) do
+      %Games.Game{} = game -> render(conn, "show.html", game: game)
+      _ -> 
+        conn
+        |> put_status(:not_found)
+        |> put_view(ClickGameWeb.ErrorView)
+        |> render("404.html")
     end
-    render(conn, "index.html", game_url: game_url)
   end
 end
