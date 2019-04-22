@@ -9,43 +9,47 @@ defmodule ClickGameWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :player_api do
-    plug :accepts, ["json"]
-    plug ClickGameWeb.Plugs.LoadUser
-  end
+  #pipeline :player_api do
+    #plug :accepts, ["json"]
+    #plug ClickGameWeb.Plugs.LoadUser
+  #end
 
-  pipeline :admin_api do
-    plug :accepts, ["json"]
+  #pipeline :admin_api do
+    #plug :accepts, ["json"]
+  #end
+
+  pipeline :user_loader do
+    plug ClickGameWeb.Plugs.LoadUser
   end
 
   scope "/", ClickGameWeb do
     pipe_through :browser
+    pipe_through :user_loader
 
     get "/", PageController, :index
     get "/login", SessionController, :new
     get "/signup", UserController, :new
     resources "/sessions", SessionController, only: [:create, :delete], singleton: true
     resources "/users", UserController, only: [:create, :delete], singleton: true
-    get "/game/:id", PageController, :game
-    #resources "/games", GameController
+    get "/game/:id", GameController, :view
   end
 
   # Other scopes may use custom stacks.
-  scope "/api/admin/", ClickGameWeb do
-    pipe_through :admin_api
-    #resources "/users", UserController, except: [:new, :edit]
-  end
+  #scope "/api/admin/", ClickGameWeb do
+    #pipe_through :admin_api
+    ##resources "/users", UserController, except: [:new, :edit]
+  #end
 
-  scope "/api/player/", ClickGameWeb do
-    pipe_through :player_api
-    get "/game_url", GameController, :game_url
-    get "/clicks", GameController, :clicks
-    get "/click", GameController, :click
-    # get "/click/:side", GameController, :click
-    get "/store/clickers", StoreController, :clickers
-    get "/store/upgrades", StoreController, :upgrades
-    get "/store", StoreController, :store
-    get "/store/clickers/buy/:id", StoreController, :buy_clicker
-    # resources "/game", UserController, :game
-  end
+  #scope "/api/player/", ClickGameWeb do
+    #pipe_through :player_api
+    #get "/game_url", GameController, :game_url
+    #get "/clicks", GameController, :clicks
+    #get "/click", GameController, :click
+    ## get "/click/:side", GameController, :click
+    #get "/store/clickers", StoreController, :clickers
+    #get "/store/upgrades", StoreController, :upgrades
+    #get "/store", StoreController, :store
+    #get "/store/clickers/buy/:id", StoreController, :buy_clicker
+    ## resources "/game", UserController, :game
+  #end
 end

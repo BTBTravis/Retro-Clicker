@@ -12,11 +12,11 @@ defmodule ClickGameWeb.GameController do
     render(conn, "clicks.json", clicks: Games.single_click(conn.assigns.user.game.id))
   end
 
-  def game_url(conn, _params) do
-    render(conn, "game_url.json", url: Games.get_game_url(conn.assigns.user.game.id))
+  def view(conn, %{"id" => id}) do
+    game_url = case conn.assigns.user.game.id do
+      nil -> ""
+      id -> Routes.game_path(conn, :view) <> id
+    end
+    render(conn, "index.html", game_url: game_url)
   end
-
-  #def click(conn, %{"side" => side}) do
-    #render(conn, "game_url.json", url: Games.get_game_url(conn.assigns.user.game.id))
-  #end
 end

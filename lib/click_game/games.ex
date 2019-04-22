@@ -105,10 +105,4 @@ defmodule ClickGame.Games do
   # iex(39)> pids = Enum.map(games, fn g -> Registry.lookup(Registry.ClickStore, g.id) |> hd |> elem(0) end)
   # iex(39)> pids |> Enum.map(fn pid -> ClickGame.Games.ClickServer.get_clicks(pid) end)
 
-  @doc """
-  Returns the URL the player may view their game at
-  """
-  def get_game_url(game_id) do
-    Application.get_env(:click_game, ClickGameWeb.Endpoint)[:url][:host] <> "/" <> Integer.to_string(game_id)
-  end
 end

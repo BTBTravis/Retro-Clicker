@@ -4,7 +4,7 @@
   <%#<li class="shadow rounded px-2 py-1"><a class="text-grey-dark" href="/leaderboard">leaderboard</a></li>%>
   <%= if is_logged(@conn) do %>
     <a class="group hover:bg-black hover:border-white font-semibold py-2 px-4 border border-black hover:border-transparent rounded no-underline" 
-       href="/game">
+       href="<%= @game_url %>">
       <p class="group-hover:text-white text-gray-700">current game</p>
     </a>
   <% else %>
