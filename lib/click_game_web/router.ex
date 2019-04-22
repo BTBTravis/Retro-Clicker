@@ -23,7 +23,9 @@ defmodule ClickGameWeb.Router do
 
     get "/", PageController, :index
     get "/login", SessionController, :new
+    get "/signup", UserController, :new
     resources "/sessions", SessionController, only: [:create, :delete], singleton: true
+    resources "/users", UserController, only: [:create, :delete], singleton: true
     get "/game/:id", PageController, :game
     #resources "/games", GameController
   end
@@ -31,7 +33,7 @@ defmodule ClickGameWeb.Router do
   # Other scopes may use custom stacks.
   scope "/api/admin/", ClickGameWeb do
     pipe_through :admin_api
-    resources "/users", UserController, except: [:new, :edit]
+    #resources "/users", UserController, except: [:new, :edit]
   end
 
   scope "/api/player/", ClickGameWeb do

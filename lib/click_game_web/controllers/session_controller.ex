@@ -21,7 +21,7 @@ defmodule ClickGameWeb.SessionController do
     case Accounts.auth_by_pw(name, pw) do
       %User{} = user ->
         conn
-        |> put_flash(:info, "Welcome back!")
+        |> put_flash(:info, "Hello " <> user.name)
         |> put_session(:user_id, user.id)
         |> configure_session(renew: true)
         |> redirect(to: "/")

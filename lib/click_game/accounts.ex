@@ -73,6 +73,17 @@ defmodule ClickGame.Accounts do
     |> Repo.insert()
   end
 
+  def create_user_and_game(attrs \\ %{}) do
+    res = case create_user(attrs) do
+      {:ok, user} -> case ClickGame.Games.create_game(%{:user_id => user.id, :clicks => 0}) do
+        {:ok, %ClickGame.Games.Game{}} -> {:ok, user}
+        e -> e
+      end
+      e -> e
+    end
+    res |> IO.inspect
+  end
+
   defp put_apikey(m) do
     apikey = :base64.encode(:crypto.strong_rand_bytes(42))
     case m do

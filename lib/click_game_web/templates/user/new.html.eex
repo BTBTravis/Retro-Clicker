@@ -1,0 +1,19 @@
+<div class="border border-black mx-auto rounded p-4 mt-20">
+  <h1 class="font-semibold text-2xl">Sign up</h1>
+
+<%= form_for @conn, Routes.user_path(@conn, :create), [method: :post, as: :user, class: "mt-4"], fn f -> %>
+  <%= label f, :name %>
+  <%= text_input f, :name, [class: "rounded bg-gray-400 px-2 py-1"] %>
+  <%= error_tag f, :name %>
+
+  <p class="mt-4">No reset, so remember...</p>
+
+  <%= label f, :password %>
+  <%= password_input f, :pw, [class: "rounded bg-gray-400 px-2 py-1"] %>
+  <%= error_tag f, :pw %>
+
+  <div>
+    <%= submit "Save", [class: "rounded bg-black text-white font-semibold px-4 py-2 hover:bg-white hover:text-black hover:border-black border mt-6"] %>
+  </div>
+<% end %>
+</div>
