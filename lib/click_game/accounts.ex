@@ -63,16 +63,36 @@ defmodule ClickGame.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
-    api_key = :base64.encode(:crypto.strong_rand_bytes(42))
-
-    final_attrs = attrs
-    |> Map.put("apikey", api_key)
-
     %User{}
-    |> User.changeset(final_attrs)
+    |> User.changeset(
+      attrs
+      |> put_pass_hash
+      |> put_apikey
+    )
     |> Ecto.Changeset.cast_assoc(:game, with: &ClickGame.Games.Game.changeset/2)
     |> Repo.insert()
   end
+
+  defp put_apikey(m) do
+    apikey = :base64.encode(:crypto.strong_rand_bytes(42))
+    case m do
+      %{} -> Map.put(m, "apikey", apikey)
+      _ -> m
+    end
+  end
+
+  defp put_pass_hash(m) do
+    case m do
+      %{"pw" => pw} ->
+        Map.put(m, "password_hash", simple_hash(pw))
+      _ -> m
+    end
+  end
+
+  defp simple_hash(pw) do
+    Bcrypt.add_hash(pw).password_hash
+  end
+
 
   @doc """
   Updates a user.

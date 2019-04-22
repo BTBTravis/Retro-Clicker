@@ -5,6 +5,7 @@ defmodule ClickGame.Accounts.User do
   schema "users" do
     field :apikey, :string
     field :name, :string
+    field :password_hash, :string
     has_one :game, ClickGame.Games.Game
 
     timestamps()
@@ -13,8 +14,8 @@ defmodule ClickGame.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :apikey])
-    |> validate_required([:name, :apikey])
+    |> cast(attrs, [:apikey, :name, :password_hash])
+    |> validate_required([:apikey, :name, :password_hash])
     |> unique_constraint(:name)
   end
 end

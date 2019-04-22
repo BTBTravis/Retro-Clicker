@@ -11,8 +11,8 @@ defmodule ClickGameWeb.UserController do
     render(conn, "index.json", users: users)
   end
 
-  def create(conn, %{"name" => name, "clicks" => clicks}) do
-    with {:ok, user} <- Accounts.create_user(%{"name" => name}) do
+  def create(conn, %{"name" => name, "pw" => pw, "clicks" => clicks}) do
+    with {:ok, user} <- Accounts.create_user(%{"name" => name, "pw" => pw}) do
       ClickGame.Games.create_game(%{:user_id => user.id, :clicks => clicks})
 
       loaded_user = Accounts.get_user!(user.id)

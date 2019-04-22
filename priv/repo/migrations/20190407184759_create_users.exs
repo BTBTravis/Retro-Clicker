@@ -5,6 +5,7 @@ defmodule ClickGame.Repo.Migrations.CreateUsers do
     create table(:users) do
       add :name, :string
       add :apikey, :string
+      add :password_hash, :string
 
       timestamps()
     end
