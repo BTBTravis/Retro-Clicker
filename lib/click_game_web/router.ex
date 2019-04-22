@@ -20,6 +20,16 @@ defmodule ClickGameWeb.Router do
 
   pipeline :user_loader do
     plug ClickGameWeb.Plugs.LoadUser
+    plug :put_socket_token
+  end
+
+  defp put_socket_token(conn, _) do
+    if current_user = conn.assigns[:user] do
+      token = Phoenix.Token.sign(conn, "user socket", current_user.id)
+      assign(conn, :user_token, token)
+    else
+      conn
+    end
   end
 
   scope "/", ClickGameWeb do

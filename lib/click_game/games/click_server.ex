@@ -55,7 +55,9 @@ defmodule ClickGame.Games.ClickServer  do
   @impl true
   def handle_info(:tick, state) do
     Process.send_after(self(), :tick, @tick_length)
-    {:noreply, %{state | clicks: state.clicks + state.rate}}
+    clicks = state.clicks + state.rate
+    ClickGameWeb.Endpoint.broadcast("game:" <> Integer.to_string(state.game_id), "click_update", %{:clicks => clicks})
+    {:noreply, %{state | clicks: clicks}}
   end
 
   def handle_info(:sync, state) do

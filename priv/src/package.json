@@ -1,16 +1,21 @@
 {
-  "name": "click-game",
-  "version": "0.0.1",
-  "description": "frontend for click game",
-  "main": "index.js",
-  "scripts": {
-      "build-css": "./node_modules/.bin/tailwind build ./css/tailwind.css -o ../static/css/main.css"
-  },
-  "author": "Travis Shears <t@travisshears.com>",
-  "license": "MIT",
-  "devDependencies": {
-      "parcel-bundler": "^1.12.3",
-      "sass": "^1.17.3",
-      "tailwindcss": "https://github.com/tailwindcss/tailwindcss.git#v1.0.0-beta.5"
-  }
+    "name": "click-game",
+    "version": "0.0.1",
+    "description": "frontend for click game",
+    "main": "index.js",
+    "scripts": {
+        "dev-js": "./node_modules/.bin/parcel ./js/main.js --out-dir ../static/js",
+        "build-css": "./node_modules/.bin/tailwind build ./css/tailwind.css -o ../static/css/main.css",
+        "build-js": "./node_modules/.bin/parcel build ./js/main.js --out-dir ../static/js"
+    },
+    "author": "Travis Shears <t@travisshears.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "parcel-bundler": "^1.12.3",
+        "sass": "^1.17.3",
+        "tailwindcss": "https://github.com/tailwindcss/tailwindcss.git#v1.0.0-beta.5"
+    },
+    "dependencies": {
+        "phoenix": "^1.4.3"
+    }
 }
