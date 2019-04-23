@@ -11,6 +11,9 @@
     "author": "Travis Shears <t@travisshears.com>",
     "license": "MIT",
     "devDependencies": {
+        "babel-core": "^6.26.3",
+        "elm-hot": "^1.0.1",
+        "node-elm-compiler": "^5.0.3",
         "parcel-bundler": "^1.12.3",
         "sass": "^1.17.3",
         "tailwindcss": "https://github.com/tailwindcss/tailwindcss.git#v1.0.0-beta.5"

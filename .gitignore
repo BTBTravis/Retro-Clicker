@@ -36,3 +36,4 @@ click_game-*.tar
 /config/*.secret.exs
 node_modules
 .cache
+elm-stuff

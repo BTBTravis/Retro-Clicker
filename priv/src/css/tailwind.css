@@ -5,4 +5,11 @@ html {
 }
 
 @tailwind components;
+.btn {
+    @apply mt-6 font-semibold py-2 px-4 border border-black  rounded no-underline  text-gray-700;
+}
+
+.btn:hover {
+    @apply text-white bg-black border-white border-transparent;
+}
 @tailwind utilities;
