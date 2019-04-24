@@ -1,32 +1,42 @@
-# ClickGame
+# Retro Clicker
 
-Then configure your database in config/dev.exs and run:
+An idle clicker game base on the idea of slow play.
 
-    $ mix ecto.create
+## Dev Env Setup
+Requirements:
 
-Start your Phoenix app with:
+* Need [elixir](https://elixir-lang.org/) installed locally 
+* Need docker and docker-compose installed locally
 
-    $ mix phx.server
+*Phoenix Setup:*
 
-You can also run your app inside IEx (Interactive Elixir) as:
+1. Start the postgres and adminer container:
+`$ docker-compose up -f docker-compose-dev.yml -d up`
+1. Install dependencies:
+`$ mix deps.get`
+1. Init db:
+`$ mix ecto.setup`
+1. Reset db as needed:
+`$ mix ecto.reset`
+1. Start up server (`localhost:4000`) with repl
+`$ iex -S mix phx.server`
 
-    $ iex -S mix phx.server
+*JS + CSS Setup:*
 
+1. Go to frontend assets folder:
+`$ cd priv/src`
+1. Build js and css assets:
+`$ npm run build`
+1. Init hot js reloader:
+`$ npm run dev-js`
 
-To start your Phoenix server:
+## Helpful dev links
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server`
-
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: http://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+* [plug docs](https://hexdocs.pm/plug/readme.html)
+* [phoenix html docs](https://hexdocs.pm/phoenix_html/Phoenix.HTML.html)
+* [EEx docs](https://hexdocs.pm/eex/EEx.html#content)
+* [ecto docs](https://hexdocs.pm/ecto/Ecto.html)
+* [phoenix docs](https://hexdocs.pm/phoenix/Phoenix.html)
+* [tailwind docs](https://tailwindcss.com/docs/what)
+* [local app](http://localhost:4000)
+* [local db](http://localhost:8080/?pgsql=postgres&username=devpostgres&db=click_game_dev&ns=public&select=games)
