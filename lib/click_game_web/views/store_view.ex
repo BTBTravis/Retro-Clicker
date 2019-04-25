@@ -15,9 +15,11 @@ defmodule ClickGameWeb.StoreView do
 
   def render("store_item.json", %{item: item}) do
     %{
-      id: item.id,
       name: item.name,
-      price: item.price
+      description: item.description,
+      sku: item.sku,
+      price: item.price,
+      rate: item.base_rate
     }
   end
 

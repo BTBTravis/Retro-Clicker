@@ -1,6 +1,23 @@
-<h1>Your Game</h1>
+<h1 class="text-xl font-bold">Your Game</h1>
 <div class="app"></div>
 
 <%#Pass info to js%>
 <script>window.gameId = "<%= @game.id %>";</script>
+
+
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<p>// TODO: inital click count?</p>
 <p class="js-click-count"><%= @game.clicks %></p>

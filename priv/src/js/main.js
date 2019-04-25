@@ -20,6 +20,11 @@ game_channel.on("click_update", payload => {
     console.log('click_update payload', payload);
 });
 
+game_channel.on("game_update", payload => {
+    console.log('Game_Update');
+    console.log('payload', payload);
+});
+
 elmApp.ports.clickPort.subscribe(function(data) {
     console.log("CLICKING!!");
     game_channel.push("click");
