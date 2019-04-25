@@ -32,7 +32,9 @@ type alias Clicker =
 
 
 type alias GameUpdate =
-    { store : Store }
+    { store : Store
+    , clickers : List Clicker
+    }
 
 
 type alias Store =
@@ -47,12 +49,14 @@ emptyStore =
 type alias Model =
     { clicks : Int
     , store : Store
+    , clickers : List Clicker
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { clicks = 0
+      , clickers = []
       , store =
             { clickers = []
             }
@@ -76,12 +80,16 @@ decodeGameUpdate payload =
                 x =
                     log "failed" message
             in
-            { store = { clickers = [] } }
+            { store = { clickers = [] }
+            , clickers = []
+            }
 
 
 gameUpdateDecoder : Decode.Decoder GameUpdate
 gameUpdateDecoder =
-    Decode.map GameUpdate (Decode.field "store" storeDecoder)
+    Decode.map2 GameUpdate
+        (Decode.field "store" storeDecoder)
+        (Decode.field "clickers" (Decode.list clickerDecoder))
 
 
 storeDecoder : Decode.Decoder Store
@@ -117,7 +125,16 @@ update msg model =
                     ( model, Cmd.none )
 
         ReciveGameUpdates value ->
-            ( { model | store = (decodeGameUpdate value).store }, Cmd.none )
+            let
+                decodedVal =
+                    decodeGameUpdate value
+            in
+            ( { model
+                | store = decodedVal.store
+                , clickers = decodedVal.clickers
+              }
+            , Cmd.none
+            )
 
         UpdateClicks c ->
             ( { model | clicks = c }, clickPort () )
@@ -162,8 +179,18 @@ view model =
     div []
         [ p [] [ text ("Clicks:" ++ String.fromInt model.clicks) ]
         , button [ class "btn", onClick (click model) ] [ text "Click" ]
+        , p [ class "mt-8 mb-2" ] [ text "Clickers:" ]
+        , div [] (List.map (\c -> viewClicker c) model.clickers)
         , p [ class "mt-8 mb-2" ] [ text "Store:" ]
         , div [] (List.map (\c -> viewStoreClicker c) model.store.clickers)
+        ]
+
+
+viewClicker : Clicker -> Html Msg
+viewClicker c =
+    div [ class "flex" ]
+        [ p [] [ text (c.name ++ "s:") ]
+        , p [ class "ml-2" ] [ text ("clicks / sec: " ++ String.fromInt c.rate) ]
         ]
 
 

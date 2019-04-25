@@ -54,7 +54,10 @@ defmodule ClickGameWeb.GameChannel do
   end
 
   def game_update_msg(game) do 
-    clickers = ClickGame.Games.Store.get_clickers(game.clickers)
-    Phoenix.View.render(ClickGameWeb.GameStateView, "state.json", %{:clickers => clickers})
+    state = %{
+      :store_clickers => ClickGame.Games.Store.get_clickers(game.clickers),
+      :clickers => game.clickers
+    }
+    Phoenix.View.render(ClickGameWeb.GameStateView, "state.json", state)
   end
 end
