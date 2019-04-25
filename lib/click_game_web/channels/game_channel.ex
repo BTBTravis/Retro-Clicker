@@ -20,7 +20,16 @@ defmodule ClickGameWeb.GameChannel do
 
   # Channels can be used in a request/response fashion
   def handle_in("click", _payload, socket) do
-    Games.single_click(1)
+    game_id = game_id_from_socket(socket)
+    Games.single_click(game_id)
+    {:reply, :ok, socket}
+  end
+
+  def handle_in("buy", sku, socket) do
+    game_id = game_id_from_socket(socket)
+    Games.Store.buy_clicker(sku, game_id)
+    push(socket, "game_update", 
+     game_update_msg(ClickGame.Games.get_game_full!(game_id)))
     {:reply, :ok, socket}
   end
   # by sending replies to requests from the client
@@ -45,12 +54,17 @@ defmodule ClickGameWeb.GameChannel do
   end
 
   def handle_info(:after_join, socket) do
-    {game_id, ""} = Regex.named_captures(~r/game:(?<id>\d+)/, socket.topic)["id"]
-              |> Integer.parse
+    game_id = game_id_from_socket(socket)
     push(socket, "game_update", 
      game_update_msg(ClickGame.Games.get_game_full!(game_id)))
 
     {:noreply, socket}
+  end
+
+  defp game_id_from_socket(socket) do
+    {game_id, ""} = Regex.named_captures(~r/game:(?<id>\d+)/, socket.topic)["id"]
+              |> Integer.parse
+    game_id
   end
 
   def game_update_msg(game) do 

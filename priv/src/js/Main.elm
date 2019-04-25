@@ -111,6 +111,7 @@ type Msg
     = UpdateClicks Int
     | ReciveClicks E.Value
     | ReciveGameUpdates E.Value
+    | Buy Clicker
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -139,6 +140,9 @@ update msg model =
         UpdateClicks c ->
             ( { model | clicks = c }, clickPort () )
 
+        Buy c ->
+            ( model, buyPort (E.string c.sku) )
+
 
 click : Model -> Msg
 click model =
@@ -150,6 +154,9 @@ click model =
 
 
 port clickPort : () -> Cmd msg
+
+
+port buyPort : E.Value -> Cmd msg
 
 
 port inboudClickPort : (E.Value -> msg) -> Sub msg
@@ -177,13 +184,18 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     div []
-        [ p [] [ text ("Clicks:" ++ String.fromInt model.clicks) ]
+        [ p [] [ text ("Clicks:" ++ String.fromInt (clickCountWithDebt model)) ]
         , button [ class "btn", onClick (click model) ] [ text "Click" ]
         , p [ class "mt-8 mb-2" ] [ text "Clickers:" ]
         , div [] (List.map (\c -> viewClicker c) model.clickers)
         , p [ class "mt-8 mb-2" ] [ text "Store:" ]
         , div [] (List.map (\c -> viewStoreClicker c) model.store.clickers)
         ]
+
+
+clickCountWithDebt : Model -> Int
+clickCountWithDebt model =
+    model.clicks - List.foldl (\x acc -> x.price + acc) 0 model.clickers
 
 
 viewClicker : Clicker -> Html Msg
@@ -202,5 +214,5 @@ viewStoreClicker c =
             , p [ class "text-gray-600 text-sm" ] [ text c.description ]
             ]
         , div [ class "w-32" ] [ p [] [ text ("cost:" ++ String.fromInt c.price) ] ]
-        , button [ class "btn mt-0 mb-4" ] [ text "Buy" ]
+        , button [ class "btn mt-0 mb-4", onClick (Buy c) ] [ text "Buy" ]
         ]

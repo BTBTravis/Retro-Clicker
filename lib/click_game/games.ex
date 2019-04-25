@@ -102,6 +102,11 @@ defmodule ClickGame.Games do
     |> Enum.sum()
   end
 
+  def player_balence(game) do
+    debt = Enum.reduce(game.clickers, 0, fn x, acc -> x.price + acc end)
+    ClickGame.Games.get_latest_click_count(game.id) - debt
+  end
+
   # iex(39)> pids = Enum.map(games, fn g -> Registry.lookup(Registry.ClickStore, g.id) |> hd |> elem(0) end)
   # iex(39)> pids |> Enum.map(fn pid -> ClickGame.Games.ClickServer.get_clicks(pid) end)
 

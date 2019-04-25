@@ -3,6 +3,7 @@ defmodule ClickGame.Games.Store do
   CLickGames' store where different clickers and upgrades
   """
   alias ClickGame.Games.Clicker
+  alias ClickGame.Games
 
   def clicker_pairs() do
     [
@@ -38,49 +39,46 @@ defmodule ClickGame.Games.Store do
 
   @spec get_clickers([%Clicker{}]) :: [%Clicker{}]
   def get_clickers(clickers) do
-    counts = Enum.reduce(clickers, %{}, fn x, acc ->
-      sku = x.sku
-      cond do
-        Map.has_key?(acc, sku) -> 
-         Map.get_and_update(acc, sku, fn total ->
-          {total, total + 1}
-         end) 
-        true -> Map.put(acc, sku, 1)
-      end
-    end)
+    counts = clickers
+	     |> Enum.map(&(&1.sku))
+	     |> Enum.reduce(%{}, fn x, acc ->
+	       count = Map.get(acc, x, 0)
+	       Map.put(acc, x, count + 1)
+	     end)
 
     clicker_pairs()
     |> Enum.map(fn x -> 
+      priceFn = elem(x, 0)
       clicker = elem(x, 1)
       sku = clicker.sku
-      priceFn = elem(x, 0)
-      cond do 
-        Map.has_key?(counts, sku) -> 
-          Map.update!(clicker, :price, fn _ -> priceFn.(counts[sku]) end)
-        true -> 
-          Map.update(clicker, :price, 0, fn _ -> priceFn.(0) end)
-      end
+      count = counts[sku] || 0
+      %Clicker{ clicker | price: priceFn.(count) }
     end)
   end
 
-  #def buy_clicker(index, _instant_activate, game_id) do
-    ##{:ok, %ClickGame.Games.Game{} = game} = ClickGame.Games.get_game!(game_id)
-    #game = ClickGame.Games.get_game_full!(game_id)
-    #clicker = Enum.at(@clickers, String.to_integer(index), :none)
-    #can_afford = case clicker do
-      #:none -> false
-      #%Clicker{} = c -> c.price <= player_balence(game)
-      #_ -> false
-    #end
+  def buy_clicker(sku, game_id) do
+    game = ClickGame.Games.get_game_full!(game_id)
+    {priceFn, clicker} = Enum.reduce(
+      clicker_pairs(), 
+      hd(clicker_pairs()), 
+      fn x, acc -> c = elem(x,1)
+        c_sku = c.sku
+        cond do
+          c_sku == sku -> x
+          true -> acc
+        end
+      end
+    )
+    existing_count = game.clickers
+		     |> Enum.filter(&(&1.sku == sku))
+		     |> Enum.count
+    price = priceFn.(existing_count)
+    can_afford = price <= Games.player_balence(game)
+    final_clicker = %Clicker{clicker | price: price}
 
-    #cond do
-      #not can_afford -> {:error, "you can't afford that clicker yet"}
-      #true -> ClickGame.Games.add_clicker_to_game(game, clicker)
-    #end
-  #end
-
-  #def player_balence(game) do
-    #debt = Enum.reduce(game.clickers, 0, fn x, acc -> x.price + acc end)
-    #ClickGame.Games.get_latest_click_count(game.id) - debt
-  #end
+    cond do
+      not can_afford -> {:error, "you can't afford that clicker yet"}
+      true -> Games.add_clicker_to_game(game, final_clicker)
+    end
+  end
 end
