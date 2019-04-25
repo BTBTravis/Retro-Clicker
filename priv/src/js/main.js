@@ -23,6 +23,7 @@ game_channel.on("click_update", payload => {
 game_channel.on("game_update", payload => {
     console.log('Game_Update');
     console.log('payload', payload);
+    elmApp.ports.inboudGameUpdatePort.send(payload.data);
 });
 
 elmApp.ports.clickPort.subscribe(function(data) {
