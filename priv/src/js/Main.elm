@@ -2,6 +2,7 @@ port module Main exposing (main)
 
 import Browser
 import Debug exposing (log)
+import Dict exposing (Dict)
 import Html exposing (Html, button, div, p, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
@@ -187,7 +188,7 @@ view model =
         [ p [] [ text ("Clicks:" ++ String.fromInt (clickCountWithDebt model)) ]
         , button [ class "btn", onClick (click model) ] [ text "Click" ]
         , p [ class "mt-8 mb-2" ] [ text "Clickers:" ]
-        , div [] (List.map (\c -> viewClicker c) model.clickers)
+        , div [] (viewClickers model.clickers)
         , p [ class "mt-8 mb-2" ] [ text "Store:" ]
         , div [] (List.map (\c -> viewStoreClicker c) model.store.clickers)
         ]
@@ -196,6 +197,37 @@ view model =
 clickCountWithDebt : Model -> Int
 clickCountWithDebt model =
     model.clicks - List.foldl (\x acc -> x.price + acc) 0 model.clickers
+
+
+add1 : Maybe Int -> Maybe Int
+add1 x =
+    case x of
+        Just num ->
+            Just <| num + 1
+
+        Nothing ->
+            Just 0
+
+
+viewClickers : List Clicker -> List (Html Msg)
+viewClickers clickers =
+    let
+        counts =
+            List.foldl
+                (\c acc ->
+                    if Dict.member c.name acc then
+                        Dict.update c.name add1 acc
+
+                    else
+                        Dict.insert c.name 1 acc
+                )
+                Dict.empty
+                clickers
+    in
+    Dict.foldl (\name total acc -> ( total, p [] [ text ("name: " ++ name ++ " total: " ++ String.fromInt total) ] ) :: acc) [] counts
+        |> List.sortBy Tuple.first
+        |> List.reverse
+        |> List.map Tuple.second
 
 
 viewClicker : Clicker -> Html Msg
