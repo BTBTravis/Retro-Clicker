@@ -1,7 +1,7 @@
 import * as p from 'phoenix';
-import { Elm } from './Main.elm'
+import { Elm } from './elm/Game.elm'
 
-const elmApp = Elm.Main.init({
+const elmApp = Elm.Game.init({
   node: document.querySelector('.app')
 })
 

@@ -14,7 +14,7 @@ defmodule ClickGameWeb.GameController do
 
   def view(conn, %{"id" => id}) do
     case Games.get_game(id) do
-      %Games.Game{} = game -> render(conn, "show.html", game: game)
+      %Games.Game{} = game -> render(conn, "show.html", [game: game, js_files: ["/js/game.js"]])
       _ -> 
         conn
         |> put_status(:not_found)

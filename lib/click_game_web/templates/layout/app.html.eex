@@ -29,6 +29,8 @@
 
     <script>window.userToken = "<%= assigns[:user_token] %>";</script>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
-    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/main.js") %>"></script>
+    <%= for path <- js_files(@conn) do %>
+      <script type="text/javascript" src="<%= Routes.static_path(@conn, path) %>"></script>
+    <% end %>
   </body>
 </html>

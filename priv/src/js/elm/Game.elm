@@ -1,4 +1,4 @@
-port module Main exposing (main)
+port module Game exposing (main)
 
 import Browser
 import Debug exposing (log)
